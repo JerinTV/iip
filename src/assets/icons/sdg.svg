@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="gold" x1="9" y1="6" x2="55" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF3C8"/>
+      <stop offset=".5" stop-color="#E9C95F"/>
+      <stop offset="1" stop-color="#A97818"/>
+    </linearGradient>
+    <filter id="glow" x="-35%" y="-35%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#D7B44A" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <path fill="url(#gold)" filter="url(#glow)" d="M32 4a28 28 0 1 0 0 56 28 28 0 0 0 0-56Zm0 8c2.5 0 5.2 5.8 6 15H26c.8-9.2 3.5-15 6-15Zm-9.8 15H12.8a20.1 20.1 0 0 1 9.8-11.6A48 48 0 0 0 22.2 27Zm0 10c.2 4.4 1 8.5 2.2 11.8A20.1 20.1 0 0 1 12.8 37h9.4ZM32 52c-2.5 0-5.2-5.8-6-15h12c-.8 9.2-3.5 15-6 15Zm6-25H26c.8-9.2 3.5-15 6-15s5.2 5.8 6 15Zm3.8 10h9.4a20.1 20.1 0 0 1-11.6 11.8A47 47 0 0 0 41.8 37Zm0-10a48 48 0 0 0-.4-11.6A20.1 20.1 0 0 1 51.2 27h-9.4Z"/>
+</svg>
