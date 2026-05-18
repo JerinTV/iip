@@ -602,7 +602,17 @@ const styles = `
 
   /* ── ABOUT ───────────────────────────────────────────────────────────────── */
   .about-section { padding: 84px 0; }
-  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; text-align: center; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 520px);
+    grid-template-areas:
+      "head head"
+      "left right";
+    gap: 56px 80px;
+    align-items: start;
+  }
+  .about-head { grid-area: head; text-align: center; }
+  .about-left { grid-area: left; text-align: center; }
   .about-body { font-size: 16px; line-height: 1.8; color: var(--muted); margin-bottom: 24px; }
   .about-highlight {
     font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic;
@@ -610,7 +620,7 @@ const styles = `
     border-left: 0; border-top: 1px solid rgba(201,168,76,0.42); border-bottom: 1px solid rgba(201,168,76,0.22);
     padding: 22px 18px; margin: 32px auto; max-width: 620px;
   }
-  .about-right { position: relative; margin-top: 44px; }
+  .about-right { grid-area: right; position: relative; margin-top: 0; }
   .about-card {
     background: rgba(15,31,56,0.6);
     border: 1px solid rgba(201,168,76,0.15); padding: 40px;
@@ -650,6 +660,30 @@ const styles = `
   /* ── 3D TILT CARDS ───────────────────────────────────────────────────────── */
   .tilt-card { transform-style: preserve-3d; perspective: 1000px; cursor: default; }
   .tilt-card-inner { transition: transform 0.1s ease; transform-style: preserve-3d; }
+  .shimmer-hover { position: relative; overflow: hidden; }
+  .shimmer-hover .tilt-card-inner::after {
+    content: '';
+    position: absolute;
+    inset: -60% -70%;
+    background: linear-gradient(115deg,
+      transparent 42%,
+      rgba(255,255,255,0.00) 46%,
+      rgba(255,255,255,0.22) 50%,
+      rgba(255,255,255,0.00) 54%,
+      transparent 58%
+    );
+    transform: translateX(-65%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .shimmer-hover:hover .tilt-card-inner::after {
+    opacity: 1;
+    animation: shimmerSweep 1.15s cubic-bezier(0.23,1,0.32,1) both;
+  }
+  @keyframes shimmerSweep {
+    from { transform: translateX(-65%); }
+    to   { transform: translateX(65%); }
+  }
 
   /* ── GLASSMORPHISM FLOATING ──────────────────────────────────────────────── */
   .glass-card {
@@ -730,7 +764,7 @@ const styles = `
     position: relative; overflow: hidden; border-radius: 18px;
     box-shadow: 0 30px 92px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.06);
     transition: transform 0.45s cubic-bezier(0.23,1,0.32,1), border-color 0.4s, box-shadow 0.4s;
-    text-align: left;
+    text-align: center;
   }
   .outcomes-card::before {
     content: ''; position: absolute; inset: 0;
@@ -767,7 +801,9 @@ const styles = `
     color: rgba(214,232,245,0.82);
     line-height: 1.75; font-size: 15px;
     margin: 0 0 26px;
-    max-width: 62ch;
+    max-width: 70ch;
+    margin-left: auto;
+    margin-right: auto;
   }
   .outcomes-rotator {
     margin-top: 18px;
@@ -801,10 +837,11 @@ const styles = `
   .outcomes-rotator-item {
     position: absolute;
     inset: 0;
-    display: grid;
-    grid-template-columns: 36px 1fr;
-    gap: 14px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 10px;
     animation: outcomeFade 520ms cubic-bezier(0.23,1,0.32,1);
   }
   @keyframes outcomeFade {
@@ -833,7 +870,8 @@ const styles = `
   .outcomes-text::after {
     content: '';
     position: absolute;
-    left: 0; bottom: 0;
+    left: 50%; bottom: 0;
+    transform: translateX(-50%);
     width: min(360px, 82%);
     height: 1px;
     background: linear-gradient(90deg, rgba(245,230,190,0.92), rgba(232,201,107,0.42), transparent);
@@ -943,12 +981,14 @@ const styles = `
     overflow: hidden;
     border-radius: 18px;
     padding: 22px 22px 22px;
-    min-height: 292px;
+    height: 312px;
     background: rgba(6, 14, 32, 0.92);
     border: 1px solid rgba(232,201,107,0.18);
     box-shadow: 0 30px 92px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.06);
     transition: transform 0.45s cubic-bezier(0.23,1,0.32,1), border-color 0.35s ease, box-shadow 0.35s ease;
     text-align: left;
+    display: flex;
+    flex-direction: column;
   }
   .curriculum-card::before {
     content: '';
@@ -1009,6 +1049,11 @@ const styles = `
     margin-left: 0;
     max-width: 52ch;
     text-align: center;
+    margin-top: auto;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
   }
 
   /* Curriculum carousel (focused center + blurred sides) */
@@ -1042,28 +1087,36 @@ const styles = `
     opacity: 1;
     z-index: 5;
   }
+  .curriculum-slide.pos-0 .curriculum-card {
+    background: rgba(4, 10, 22, 0.98);
+    border-color: rgba(245,230,190,0.30);
+    box-shadow:
+      0 54px 140px rgba(0,0,0,0.62),
+      0 0 80px rgba(201,168,76,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.07);
+  }
   .curriculum-slide.pos--1 {
     transform: translateX(calc(-50% - clamp(180px, 22vw, 260px))) translateZ(-120px) scale(0.92);
-    filter: blur(1.6px) saturate(0.85);
-    opacity: 0.70;
+    filter: blur(3.2px) saturate(0.72) brightness(0.72);
+    opacity: 0.52;
     z-index: 4;
   }
   .curriculum-slide.pos-1 {
     transform: translateX(calc(-50% + clamp(180px, 22vw, 260px))) translateZ(-120px) scale(0.92);
-    filter: blur(1.6px) saturate(0.85);
-    opacity: 0.70;
+    filter: blur(3.2px) saturate(0.72) brightness(0.72);
+    opacity: 0.52;
     z-index: 4;
   }
   .curriculum-slide.pos--2 {
     transform: translateX(calc(-50% - clamp(320px, 34vw, 520px))) translateZ(-260px) scale(0.84);
-    filter: blur(2.6px) saturate(0.75);
-    opacity: 0.46;
+    filter: blur(5.2px) saturate(0.58) brightness(0.62);
+    opacity: 0.28;
     z-index: 3;
   }
   .curriculum-slide.pos-2 {
     transform: translateX(calc(-50% + clamp(320px, 34vw, 520px))) translateZ(-260px) scale(0.84);
-    filter: blur(2.6px) saturate(0.75);
-    opacity: 0.46;
+    filter: blur(5.2px) saturate(0.58) brightness(0.62);
+    opacity: 0.28;
     z-index: 3;
   }
   .curriculum-slide.pos--1 .curriculum-card,
@@ -1248,7 +1301,9 @@ const styles = `
     padding: 0;
     background: transparent;
     border: 1px solid rgba(201,168,76,0.24);
+    --award-radius: 24px;
     position: relative; overflow: hidden;
+    border-radius: var(--award-radius);
     transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), border-color 0.5s cubic-bezier(0.23,1,0.32,1), box-shadow 0.5s cubic-bezier(0.23,1,0.32,1);
     cursor: none;
     box-shadow: 0 30px 90px rgba(0,0,0,0.22);
@@ -1267,10 +1322,10 @@ const styles = `
 
   .award-surface {
     position: relative;
-    background: rgba(255,255,255,0.98);
+    background: #ffffff;
     overflow: hidden;
-    border-radius: 22px;
-    padding: 28px 44px 46px;
+    border-radius: var(--award-radius);
+    padding: 26px 34px 34px;
   }
   .award-surface::before {
     content: '';
@@ -1278,28 +1333,47 @@ const styles = `
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(180px 260px at 0% 56%, rgba(201,168,76,0.18), transparent 62%),
-      radial-gradient(180px 260px at 100% 56%, rgba(74,144,217,0.12), transparent 62%),
-      linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.90));
-    opacity: 0.75;
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='220' viewBox='0 0 900 220'%3E%3Cg fill='none' stroke='%23C9A84C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' opacity='0.60'%3E%3Cpath d='M168 110c36-40 92-58 152-44 24 6 40 18 40 34 0 22-24 34-46 22-18-10-14-30 6-30'/%3E%3Cpath d='M240 160c26-28 66-40 106-30 14 4 24 12 24 22 0 16-18 24-34 16-12-6-10-18 4-18'/%3E%3Cpath d='M108 130c18-14 40-22 64-24 28-2 54 4 76 18'/%3E%3Cpath d='M300 76c-18 4-34 12-48 24-10 10-14 18-12 28'/%3E%3Cpath d='M732 110c-36-40-92-58-152-44-24 6-40 18-40 34 0 22 24 34 46 22 18-10 14-30-6-30'/%3E%3Cpath d='M660 160c-26-28-66-40-106-30-14 4-24 12-24 22 0 16 18 24 34 16 12-6 10-18-4-18'/%3E%3Cpath d='M792 130c-18-14-40-22-64-24-28-2-54 4-76 18'/%3E%3Cpath d='M600 76c18 4 34 12 48 24 10 10 14 18 12 28'/%3E%3C/g%3E%3Cg fill='none' stroke='%23E8C96B' stroke-width='1.2' stroke-linecap='round' opacity='0.45'%3E%3Cpath d='M238 96c20-14 48-18 74-10 12 4 18 12 16 20-4 14-22 18-30 6-6-10 4-18 14-12'/%3E%3Cpath d='M662 96c-20-14-48-18-74-10-12 4-18 12-16 20 4 14 22 18 30 6 6-10-4-18-14-12'/%3E%3C/g%3E%3C/svg%3E"),
+      radial-gradient(circle at 50% 38%, rgba(201,168,76,0.10), transparent 42%),
+      radial-gradient(circle at 50% 38%, rgba(6,18,38,0.04), transparent 54%),
+      repeating-linear-gradient(90deg, rgba(6,18,38,0.03) 0 1px, transparent 1px 8px),
+      repeating-linear-gradient(0deg, rgba(6,18,38,0.02) 0 1px, transparent 1px 10px),
+      radial-gradient(360px 560px at 0% 56%, rgba(201,168,76,0.16), transparent 62%),
+      radial-gradient(360px 560px at 100% 56%, rgba(74,144,217,0.10), transparent 62%),
+      linear-gradient(180deg, rgba(255,255,255,0.70), rgba(255,255,255,0.45));
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+    background-position: 50% 10px, 50% 10px, 50% 10px, 0 0, 0 0, 0 0, 0 0, 0 0;
+    background-size: min(860px, 98%), min(860px, 98%), auto, auto, auto, auto, auto, auto;
+    opacity: 0.55;
   }
   .award-surface::after {
     content: '';
     position: absolute;
-    inset: -2px;
+    inset: 12px;
     pointer-events: none;
-    border-radius: 24px;
-    border: 1px solid rgba(214,232,245,0.8);
-    box-shadow: inset 0 0 0 1px rgba(201,168,76,0.12);
+    border-radius: calc(var(--award-radius) - 12px);
+    border: 1px solid rgba(201,168,76,0.48);
+    box-shadow:
+      inset 0 0 0 1px rgba(245,230,190,0.55),
+      0 0 0 1px rgba(6,18,38,0.06);
+    background:
+      conic-gradient(from 0deg at 18px 18px, rgba(201,168,76,0.0) 0 70%, rgba(201,168,76,0.55) 78% 82%, rgba(201,168,76,0.0) 90% 100%),
+      conic-gradient(from 90deg at calc(100% - 18px) 18px, rgba(201,168,76,0.0) 0 70%, rgba(201,168,76,0.55) 78% 82%, rgba(201,168,76,0.0) 90% 100%),
+      conic-gradient(from 180deg at calc(100% - 18px) calc(100% - 18px), rgba(201,168,76,0.0) 0 70%, rgba(201,168,76,0.55) 78% 82%, rgba(201,168,76,0.0) 90% 100%),
+      conic-gradient(from 270deg at 18px calc(100% - 18px), rgba(201,168,76,0.0) 0 70%, rgba(201,168,76,0.55) 78% 82%, rgba(201,168,76,0.0) 90% 100%);
+    background-repeat: no-repeat;
+    background-size: 32px 32px;
+    background-position: 0 0, 100% 0, 100% 100%, 0 100%;
   }
   .award-layout {
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 18px;
     align-items: center;
     text-align: center;
+    width: 100%;
   }
   .award-medal {
     display: grid;
@@ -1330,9 +1404,20 @@ const styles = `
     z-index: -1;
   }
   .award-card:hover .award-medal { transform: translateY(-6px); }
-  .award-medal::after { display: none; }
+  .award-medal::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    width: clamp(180px, 34vw, 320px);
+    height: 34px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(201,168,76,0.0), rgba(201,168,76,0.22), rgba(232,201,107,0.26), rgba(201,168,76,0.22), rgba(201,168,76,0.0));
+    z-index: -2;
+  }
 
-  .award-content { text-align: center; }
+  .award-content { text-align: center; width: 100%; }
   .award-kicker {
     display: inline-flex; align-items: center; gap: 10px;
     font-size: 11px; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase;
@@ -1344,18 +1429,27 @@ const styles = `
     width: 34px; height: 1px;
     background: linear-gradient(90deg, rgba(201,168,76,0.95), rgba(201,168,76,0.15));
   }
-  .award-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 800; color: #061226; margin-bottom: 14px; line-height: 1.05; }
-  .award-desc { font-family: 'Source Serif 4', serif; font-size: 15px; line-height: 1.85; font-weight: 650; color: rgba(6,18,38,0.92); margin-bottom: 0; max-width: 62ch; }
+  .award-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: #061226;
+    margin-bottom: 12px;
+    line-height: 1.05;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .award-desc { font-family: 'Source Serif 4', serif; font-size: 15px; line-height: 1.85; font-weight: 650; color: rgba(6,18,38,0.92); margin-bottom: 0; max-width: none; }
   .awards-section .award-desc { color: rgba(6,18,38,0.92) !important; -webkit-text-fill-color: rgba(6,18,38,0.92); }
   .award-tags { display: none; }
   .award-tag { display: none; }
 
   @media (max-width: 820px) {
-    .award-surface { padding: 22px 20px 34px; }
+    .award-surface { padding: 22px 18px 28px; }
     .award-layout { text-align: center; }
     .award-desc { margin-left: auto; margin-right: auto; }
     .award-kicker { justify-content: center; }
     .award-kicker::before { width: 26px; }
+    .award-content { padding: 0; }
   }
 
   /* ── FACULTY ─────────────────────────────────────────────────────────────── */
@@ -1378,20 +1472,44 @@ const styles = `
   }
   .faculty-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--white); margin-bottom: 20px; }
   .faculty-desc { font-size: 16px; line-height: 1.8; color: var(--muted); max-width: 600px; margin: 0 auto 48px; }
-  .faculty-icons { display: flex; gap: 34px; justify-content: center; flex-wrap: wrap; }
-  .faculty-icon-item { text-align: center; cursor: none; }
+  .faculty-icons {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px;
+    justify-items: center;
+    align-items: start;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .faculty-icon-item { text-align: center; cursor: none; min-width: 0; }
   .faculty-icon {
     width: 62px; height: 62px; display: grid; place-items: center; margin: 0 auto 12px;
     border-radius: 50%; border: 1px solid rgba(232,201,107,0.42);
     background: linear-gradient(145deg, rgba(201,168,76,0.16), rgba(10,22,40,0.76));
     color: var(--gold-light);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 14px 34px rgba(0,0,0,0.24);
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.06),
+      0 14px 34px rgba(0,0,0,0.24);
     transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), filter 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .faculty-icon .premium-icon-image {
+    filter:
+      drop-shadow(0 8px 18px rgba(0,0,0,0.22))
+      drop-shadow(0 0 16px rgba(201,168,76,0.28));
+    transition: filter 0.35s ease;
   }
   .faculty-icon-item:hover .faculty-icon {
     transform: translateY(-7px);
     border-color: rgba(245,230,190,0.76);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 18px 42px rgba(201,168,76,0.14);
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.10),
+      0 18px 42px rgba(201,168,76,0.22);
+  }
+  .faculty-icon-item:hover .faculty-icon .premium-icon-image {
+    filter:
+      drop-shadow(0 10px 22px rgba(0,0,0,0.20))
+      drop-shadow(0 0 24px rgba(201,168,76,0.52))
+      drop-shadow(0 0 40px rgba(232,201,107,0.26));
   }
   .faculty-icon-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 
@@ -1686,7 +1804,7 @@ const styles = `
     .faculty-section { padding: 56px 0; }
     .faculty-card { padding: 48px 24px; }
     .faculty-bg-text { font-size: 100px; }
-    .faculty-icons { gap: 24px; }
+    .faculty-icons { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; max-width: 520px; }
     .faq-section { padding: 56px 0; }
     .faq-list { max-width: 100%; }
     .faq-question { font-size: 15px; padding: 22px 20px; gap: 14px; }
@@ -1716,14 +1834,14 @@ const styles = `
     .outcomes-check { width: 30px; height: 30px; font-size: 13px; }
     .outcomes-text { font-size: 22px; padding-bottom: 8px; }
     .structure-atlas { grid-template-columns: 1fr; gap: 18px; }
-    .curriculum-card { min-height: auto; padding: 26px 20px; border-radius: 20px; }
+    .curriculum-card { height: 312px; padding: 26px 20px; border-radius: 20px; }
     .curriculum-card::after { font-size: 88px; right: -6px; bottom: -18px; }
     .curriculum-title { font-size: 24px; }
     .curriculum-desc { font-size: 14px; }
     .diff-card { flex-direction: column; gap: 16px; padding: 28px 20px; }
     .diff-icon-wrap { width: 52px; height: 52px; }
     .award-medal { margin-bottom: 18px; }
-    .faculty-icons { gap: 16px; }
+    .faculty-icons { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 420px; }
     .faculty-icon { width: 54px; height: 54px; }
     .faq-item { margin-inline: -2px; }
     .faq-question {
@@ -2110,6 +2228,57 @@ export default function App() {
     return () => obs.disconnect();
   }, [loaded]);
 
+  // Count-up stats (About card)
+  useEffect(() => {
+    if (!loaded) return;
+    const statEls = Array.from(document.querySelectorAll(".about-card .card-stat-num"));
+    if (!statEls.length) return;
+
+    const format = new Intl.NumberFormat(undefined);
+    const parsed = statEls.map((el) => {
+      const original = (el.textContent || "").trim();
+      const digits = original.replace(/[^\d]/g, "");
+      const target = digits ? Number(digits) : null;
+      const prefixMatch = original.match(/^[^\d]+/);
+      const prefix = prefixMatch ? prefixMatch[0] : "";
+      return { el, original, target, prefix, started: false };
+    });
+
+    const animateTo = (el, prefix, target) => {
+      const start = performance.now();
+      const dur = 1100;
+      const from = 0;
+      const ease = (t) => 1 - Math.pow(1 - t, 3);
+      const tick = (now) => {
+        const p = Math.min(1, (now - start) / dur);
+        const v = Math.round(from + (target - from) * ease(p));
+        el.textContent = prefix + format.format(v);
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const item = parsed.find(p => p.el === e.target);
+          if (!item || item.started) continue;
+          item.started = true;
+          if (typeof item.target === "number" && Number.isFinite(item.target)) {
+            animateTo(item.el, item.prefix, item.target);
+          } else {
+            item.el.textContent = item.original;
+          }
+        }
+      },
+      { threshold: 0.4, rootMargin: "0px 0px -10% 0px" }
+    );
+
+    parsed.forEach(p => obs.observe(p.el));
+    return () => obs.disconnect();
+  }, [loaded]);
+
   // Active section
   useEffect(() => {
     const sections = navItems.map(n => document.getElementById(n.id)).filter(Boolean);
@@ -2147,7 +2316,7 @@ export default function App() {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     if (reduce) return;
 
-    const t = window.setInterval(goNextModule, 2800);
+    const t = window.setInterval(goNextModule, 2000);
     return () => window.clearInterval(t);
   }, [goNextModule, modulePaused]);
 
@@ -2252,8 +2421,6 @@ export default function App() {
           {!loaded ? <HeroSkeleton /> : (
             <div className="hero-content" ref={parallaxRef}>
               <div className="hero-eyebrow">
-                <div className="eyebrow-line" />
-                <div className="eyebrow-text">IISPPR Academy · Pre-Launch 2025</div>
               </div>
               <h1 className="hero-title">
                 <span className="word-wrap"><span className="word-inner">Research.</span></span>
@@ -2301,12 +2468,14 @@ export default function App() {
         <section className="about-section" id="about">
           <div className="section-inner">
             <div className="about-grid">
-              <div className="reveal">
+              <div className="reveal about-head">
                 <div className="section-label">
                   <div className="label-line" />
                   <div className="label-text">About the Program</div>
                 </div>
                 <h2 className="section-title">Shape the Future<br /><em>Through Evidence</em></h2>
+              </div>
+              <div className="reveal about-left">
                 <p className="about-body">
                   IISPPR's flagship program turns policy curiosity into publishable, evidence-backed research. It is crafted for ambitious learners who want to move beyond theory and produce work with academic credibility and real-world relevance.
                 </p>
@@ -2316,7 +2485,7 @@ export default function App() {
               </div>
               <div className="reveal reveal-delay-2 about-right">
                 <div className="about-deco" />
-                <TiltCard className="about-card glass-card">
+                <TiltCard className="about-card glass-card shimmer-hover">
                   <div className="card-stat-grid">
                     {[
                       { num: "₹2,999", raw: "₹2,999", label: "Pre-Launch Price" },
@@ -2348,7 +2517,7 @@ export default function App() {
             </div>
             <div className="learn-grid">
               {LEARN_ITEMS.map((item, i) => (
-                <TiltCard key={item.title} className={"learn-card reveal reveal-delay-" + ((i % 3) + 1)}>
+                <TiltCard key={item.title} className={"learn-card shimmer-hover reveal reveal-delay-" + ((i % 3) + 1)}>
                   <div className="learn-icon">
                     <span className="learn-icon-mark">
                       <img className="learn-icon-img" src={LEARN_ICON_IMAGES[i]} alt="" aria-hidden="true" loading="lazy" decoding="async" />
@@ -2397,8 +2566,7 @@ export default function App() {
                     </div>
                   </div>
                   <div className="outcomes-rotator-stage">
-                    <div key={outcomeIndex} className="outcomes-rotator-item">
-                      <div className="outcomes-check">✓</div>
+                  <div key={outcomeIndex} className="outcomes-rotator-item">
                       <div className="outcomes-text">{OUTCOMES[outcomeIndex]}</div>
                     </div>
                   </div>
@@ -2453,7 +2621,7 @@ export default function App() {
                       className={"curriculum-slide " + cls}
                       aria-hidden={pos !== 0}
                     >
-                      <TiltCard className="curriculum-card">
+                      <TiltCard className="curriculum-card shimmer-hover">
                         <div className="curriculum-head">
                           <div className="curriculum-icon"><PremiumIcon name={item.icon} /></div>
                           <div>
@@ -2533,7 +2701,7 @@ export default function App() {
                   desc: "The authors of the Top 2 Best Papers will be awarded the prestigious Gold Medal, honoring their contribution to advancing meaningful, evidence-based public policy discussions.",
                   tags: [] },
               ].map((a, i) => (
-                <TiltCard key={a.title} className={"award-card reveal reveal-delay-" + (i + 1)}>
+                <TiltCard key={a.title} className={"award-card shimmer-hover reveal reveal-delay-" + (i + 1)}>
                   <div className="award-surface">
                     <div className="award-layout">
                       <div className="award-medal" aria-hidden="true">
