@@ -338,6 +338,17 @@ const styles = `
     display: flex; align-items: center;
     overflow: hidden; padding: 0 60px;
   }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    width: min(1200px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 440px);
+    grid-template-areas: "content side";
+    gap: 64px;
+    align-items: center;
+  }
   .hero-bg {
     position: absolute; inset: 0;
     background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(10,22,40,0.9) 0%, transparent 70%),
@@ -407,7 +418,7 @@ const styles = `
   }
 
   /* Hero entrance animations */
-  .hero-content { position: relative; z-index: 2; max-width: 900px; margin: 0; text-align: left; }
+  .hero-content { grid-area: content; position: relative; max-width: 900px; margin: 0; text-align: left; }
   .hero-eyebrow {
     display: flex; align-items: center; justify-content: flex-start; gap: 16px; margin-bottom: 32px;
     opacity: 0; animation: heroFadeSlide 0.9s 0.2s cubic-bezier(0.23,1,0.32,1) forwards;
@@ -456,8 +467,12 @@ const styles = `
 
   /* Hero side */
   .hero-side {
-    position: absolute; right: 235px; top: 16%; transform: translateY(-55%);
-    width: min(520px, 40vw); z-index: 2; text-align: center; pointer-events: none;
+    grid-area: side;
+    position: relative;
+    transform: none;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
     display: flex; flex-direction: column; align-items: center;
     opacity: 0; animation: heroFadeSlide 1.2s 0.5s cubic-bezier(0.23,1,0.32,1) forwards;
   }
@@ -1710,20 +1725,8 @@ const styles = `
     .hero {
       min-height: auto;
       padding: 120px 32px 84px;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: center;
-      gap: 30px;
     }
-    .hero-side {
-      order: -1;
-      position: relative;
-      right: auto; top: auto;
-      transform: none;
-      width: min(360px, 100%);
-      margin: 0 auto;
-      z-index: 3;
-    }
+    .hero-inner { grid-template-columns: 1fr; grid-template-areas: "side" "content"; gap: 36px; }
     .section-inner { padding: 0 32px; }
     .learn-grid { grid-template-columns: repeat(2, 1fr); }
     .about-grid { gap: 48px; }
@@ -1739,23 +1742,9 @@ const styles = `
     .hero {
       min-height: auto;
       padding: 104px 24px 76px;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: center;
-      gap: 30px;
     }
-    .hero-side {
-      order: -1;
-      position: relative;
-      right: auto; top: auto;
-      transform: none;
-      width: min(360px, 100%);
-      margin: 0 auto;
-      z-index: 3;
-      display: flex;
-      opacity: 1;
-      animation: heroFadeSlide 0.9s 0.15s cubic-bezier(0.23,1,0.32,1) both;
-    }
+    .hero-inner { grid-template-columns: 1fr; grid-template-areas: "side" "content"; gap: 30px; }
+    .hero-side { opacity: 1; animation: heroFadeSlide 0.9s 0.15s cubic-bezier(0.23,1,0.32,1) both; }
     .hero-side-logo {
       width: clamp(128px, 42vw, 196px);
       max-width: 100%;
@@ -1818,7 +1807,7 @@ const styles = `
   }
   @media (max-width: 480px) {
     .hero { padding: 96px 18px 64px; gap: 24px; }
-    .hero-side { width: min(300px, 100%); }
+    .hero-inner { gap: 24px; }
     .hero-side-logo { width: clamp(118px, 48vw, 164px); }
     .hero-side-org { font-size: 15px; }
     .hero-title { font-size: 42px; }
@@ -2418,6 +2407,14 @@ export default function App() {
 
           <DecorativeSVG />
 
+          <div className="hero-inner" aria-label="Hero content">
+            <aside className="hero-side" aria-label="Organization identity">
+              <img className="hero-side-logo" src="/logo.png" alt="IISPPR logo" />
+              <div className="hero-side-org">
+                <strong>International Institute</strong> of SDGs &amp; Public Policy Research
+              </div>
+            </aside>
+
           {!loaded ? <HeroSkeleton /> : (
             <div className="hero-content" ref={parallaxRef}>
               <div className="hero-eyebrow">
@@ -2442,14 +2439,7 @@ export default function App() {
               </div>
             </div>
           )}
-
-          <aside className="hero-side" aria-label="Organization identity">
-            <img className="hero-side-logo" src="/logo.png" alt="IISPPR logo" />
-            <div className="hero-side-org">
-              <strong>International Institute</strong> of SDGs &amp; Public Policy Research
-            </div>
-          </aside>
-
+          </div>
         </section>
 
         {/* ── MARQUEE ──────────────────────────────────────────────────────── */}
