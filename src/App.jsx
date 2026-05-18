@@ -500,6 +500,7 @@ const styles = `
     text-align: center;
     pointer-events: none;
     display: flex; flex-direction: column; align-items: center;
+    padding-top: clamp(18px, 5vw, 84px);
     opacity: 0; animation: heroFadeSlide 1.2s 0.5s cubic-bezier(0.23,1,0.32,1) forwards;
   }
   .hero-side-logo {
@@ -1770,6 +1771,7 @@ const styles = `
       padding: 120px 32px 84px;
     }
     .hero-inner { padding-top: 0; padding-bottom: 0; }
+    .hero-side { padding-top: 0; }
     .hero-inner {
       grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
       grid-template-areas: "content side";
@@ -1797,7 +1799,7 @@ const styles = `
       grid-template-areas: "content side";
       gap: 24px;
     }
-    .hero-side { opacity: 1; animation: heroFadeSlide 0.9s 0.15s cubic-bezier(0.23,1,0.32,1) both; }
+    .hero-side { padding-top: 0; opacity: 1; animation: heroFadeSlide 0.9s 0.15s cubic-bezier(0.23,1,0.32,1) both; }
     .hero-side-logo {
       width: clamp(128px, 42vw, 196px);
       max-width: 100%;
@@ -2480,9 +2482,7 @@ export default function App() {
 
           {!loaded ? <HeroSkeleton /> : (
               <div className="hero-content">
-              <div className="hero-eyebrow">
-              </div>
-              <h1 className="hero-title">
+                <h1 className="hero-title">
                 <span className="word-wrap"><span className="word-inner">Research.</span></span>
                 <span className="word-wrap"><span className="word-inner" style={{ animationDelay: "0.45s" }}><em>Policy.</em></span></span>
                 <span className="word-wrap"><span className="word-inner" style={{ animationDelay: "0.6s" }}><span className="outline-text">Published.</span></span></span>
