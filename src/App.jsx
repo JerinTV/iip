@@ -1754,7 +1754,11 @@ const styles = `
       min-height: auto;
       padding: 120px 32px 84px;
     }
-    .hero-inner { grid-template-columns: 1fr; grid-template-areas: "side" "content"; gap: 36px; }
+    .hero-inner {
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
+      grid-template-areas: "content side";
+      gap: 40px;
+    }
     .section-inner { padding: 0 32px; }
     .learn-grid { grid-template-columns: repeat(2, 1fr); }
     .about-grid { gap: 48px; }
@@ -1771,7 +1775,11 @@ const styles = `
       min-height: auto;
       padding: 104px 24px 76px;
     }
-    .hero-inner { grid-template-columns: 1fr; grid-template-areas: "side" "content"; gap: 30px; }
+    .hero-inner {
+      grid-template-columns: minmax(0, 1fr) minmax(200px, 320px);
+      grid-template-areas: "content side";
+      gap: 24px;
+    }
     .hero-side { opacity: 1; animation: heroFadeSlide 0.9s 0.15s cubic-bezier(0.23,1,0.32,1) both; }
     .hero-side-logo {
       width: clamp(128px, 42vw, 196px);
@@ -1873,6 +1881,15 @@ const styles = `
     .cta-btn { padding: 16px 32px; width: 100%; }
     .marquee-section { display: none; }
     .snapshot-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Stack hero only on truly small widths (keeps right-side logo for Chrome "Desktop site") */
+  @media (max-width: 680px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      grid-template-areas: "side" "content";
+      gap: 30px;
+    }
   }
 
   /* Premium text hierarchy */
