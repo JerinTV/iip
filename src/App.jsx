@@ -308,6 +308,17 @@ const styles = `
     cursor: none; background: none; border: none; padding: 4px;
   }
   .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--gold); transition: all 0.3s ease; }
+
+  /* Prevent logo overlap + collapse nav earlier on smaller widths */
+  .nav-logo { white-space: nowrap; }
+  @media (max-width: 980px) {
+    .nav { padding: 16px 24px; }
+    .nav.scrolled { padding: 12px 24px; }
+    .nav-logo { font-size: 18px; letter-spacing: 0.06em; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .nav-cta { padding: 9px 16px; font-size: 10px; }
+  }
   .mobile-menu {
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(4,8,15,0.98); backdrop-filter: blur(20px);
@@ -1537,6 +1548,23 @@ const styles = `
   .award-medal .premium-icon-image { width: var(--award-anim); height: var(--award-anim); }
   .award-medal .award-lottie { width: var(--award-anim); height: var(--award-anim); }
   .award-medal .award-video { width: var(--award-anim); height: var(--award-anim); display: block; object-fit: contain; }
+  .award-medal .award-lottie,
+  .award-medal .award-video,
+  .award-medal .premium-icon-image {
+    border-radius: 999px;
+  }
+  .award-medal::before {
+    border-radius: 999px;
+  }
+  .award-medal .award-lottie,
+  .award-medal .award-video,
+  .award-medal .premium-icon-image {
+    box-shadow:
+      0 18px 52px rgba(0,0,0,0.18),
+      0 0 0 2px rgba(201,168,76,0.55),
+      0 0 0 6px rgba(245,230,190,0.22),
+      0 0 34px rgba(201,168,76,0.18);
+  }
   .faculty-icon .premium-icon-image { width: 30px; height: 30px; }
 
   @media (max-width: 480px) {
