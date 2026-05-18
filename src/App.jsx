@@ -371,7 +371,9 @@ const styles = `
     grid-template-columns: minmax(0, 1fr) minmax(240px, 440px);
     grid-template-areas: "content side";
     gap: 64px;
-    align-items: center;
+    align-items: start;
+    padding-top: 132px;
+    padding-bottom: 40px;
   }
   .hero-bg {
     position: absolute; inset: 0;
@@ -1767,6 +1769,7 @@ const styles = `
       min-height: auto;
       padding: 120px 32px 84px;
     }
+    .hero-inner { padding-top: 0; padding-bottom: 0; }
     .hero-inner {
       grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
       grid-template-areas: "content side";
@@ -1788,6 +1791,7 @@ const styles = `
       min-height: auto;
       padding: 104px 24px 76px;
     }
+    .hero-inner { padding-top: 0; padding-bottom: 0; }
     .hero-inner {
       grid-template-columns: minmax(0, 1fr) minmax(200px, 320px);
       grid-template-areas: "content side";
