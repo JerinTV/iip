@@ -2239,7 +2239,8 @@ export default function App() {
   const [diffIndex,      setDiffIndex]      = useState(0);
   const [diffPaused,     setDiffPaused]     = useState(false);
   const lastScrollY = useRef(0);
-  const parallaxRef = useParallax(0.15);
+  // Parallax on the hero content caused layout drift on scroll (especially in mobile "desktop site"),
+  // so keep hero content stable.
 
   const navItems = useMemo(() => [
     { label: "About",      id: "about"      },
@@ -2478,7 +2479,7 @@ export default function App() {
             </aside>
 
           {!loaded ? <HeroSkeleton /> : (
-            <div className="hero-content" ref={parallaxRef}>
+              <div className="hero-content">
               <div className="hero-eyebrow">
               </div>
               <h1 className="hero-title">
