@@ -249,6 +249,7 @@ const styles = `
     transform: translateY(0);
   }
   .nav.hidden { transform: translateY(-110%); }
+  .nav.menu-open { pointer-events: none; }
   .nav.scrolled {
     background: rgba(4,8,15,0.85);
     backdrop-filter: blur(24px) saturate(180%);
@@ -322,7 +323,7 @@ const styles = `
   .mobile-menu {
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(4,8,15,0.98); backdrop-filter: blur(20px);
-    z-index: 490; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    z-index: 900; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
     animation: menuSlideIn 0.4s cubic-bezier(0.23,1,0.32,1);
   }
   @keyframes menuSlideIn {
@@ -331,7 +332,19 @@ const styles = `
   }
   .mobile-menu.open { display: flex; }
   .mobile-menu .nav-link { font-size: 20px; letter-spacing: 0.1em; }
-  .mobile-close { position: absolute; top: 24px; right: 24px; background: none; border: none; color: var(--gold); font-size: 28px; cursor: none; }
+  .mobile-close {
+    position: absolute; top: 18px; right: 18px;
+    background: rgba(4,8,15,0.35);
+    border: 1px solid rgba(201,168,76,0.32);
+    color: var(--gold);
+    width: 44px; height: 44px;
+    border-radius: 999px;
+    font-size: 22px;
+    display: grid;
+    place-items: center;
+    cursor: none;
+    z-index: 910;
+  }
 
   /* ── SKIP LINK ──────────────────────────────────────────────────────────── */
   .skip-link {
@@ -2400,7 +2413,7 @@ export default function App() {
       </div>
 
       {/* NAVBAR */}
-      <nav className={"nav" + (scrolled ? " scrolled" : "") + (navHidden ? " hidden" : "")}>
+      <nav className={"nav" + (scrolled ? " scrolled" : "") + (navHidden ? " hidden" : "") + (mobileOpen ? " menu-open" : "")}>
         <a className="nav-logo" href="#about" onClick={e => { e.preventDefault(); scrollToId("about"); }}>
           <NavLogoImage />
           IISPPR <span>Academy</span>
